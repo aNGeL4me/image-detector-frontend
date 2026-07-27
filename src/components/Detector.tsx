@@ -1,14 +1,18 @@
 import { useState } from 'react';
+import ModelSelector from './ModelSelector';
+import { useModelSelection } from '../hooks/useModelSelection';
 
 interface DetectionResult {
   id: number;
   imageUrl: string;
   label: '真实' | 'AI生成';
   confidence: number;
+  modelName: string;
   timestamp: string;
 }
 
 export default function Detector() {
+  const { displayed, displayedId, selectedId, preview, select } = useModelSelection();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState(false);
@@ -36,6 +40,7 @@ export default function Detector() {
         imageUrl: previewUrl,
         label: isFake ? 'AI生成' : '真实',
         confidence: parseFloat(confidence),
+        modelName: displayed.name,
         timestamp: new Date().toLocaleTimeString(),
       };
 
@@ -52,9 +57,19 @@ export default function Detector() {
   return (
     <section id="detector" className="section">
       <h2>在线检测</h2>
-      <p className="section-subtitle">上传图片，体验 AI 检测效果</p>
+      <p className="section-subtitle">选择检测模型，上传图片，体验 AI 检测效果</p>
+
+      <ModelSelector
+        displayedId={displayedId}
+        selectedId={selectedId}
+        onPreview={preview}
+        onSelect={select}
+      />
 
       <div className="detector-box">
+        <p className="detector-current-model">
+          当前模型：{displayed.icon} {displayed.name}
+        </p>
         <label htmlFor="file-input" className="upload-btn">
           选择图片
         </label>
@@ -93,6 +108,7 @@ export default function Detector() {
                     {item.label}
                   </span>
                   <span className="confidence">置信度：{item.confidence}%</span>
+                  <span className="model-used">模型：{item.modelName}</span>
                   <span className="time">{item.timestamp}</span>
                 </div>
               </div>
