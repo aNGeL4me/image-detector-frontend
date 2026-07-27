@@ -505,6 +505,11 @@ tr:last-child td {
   background: #f8f9fa;
 }
 
+.profile-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
 .back-btn {
   display: inline-block;
   padding: 10px 20px;
@@ -515,47 +520,242 @@ tr:last-child td {
   font-size: 14px;
   cursor: pointer;
   transition: background 0.2s;
+  margin-bottom: 24px;
 }
 
 .back-btn:hover {
   background: #0056b3;
 }
 
-.member-detail {
-  max-width: 640px;
-  margin: 48px auto 0;
+/* 板块一：个人资料卡 */
+.profile-card {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
   background: white;
-  padding: 48px 40px;
+  padding: 48px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  text-align: center;
 }
 
-.member-detail .avatar {
-  font-size: 96px;
-  margin-bottom: 16px;
+.profile-avatar {
+  flex-shrink: 0;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 88px;
+  background: linear-gradient(135deg, #eef4ff 0%, #f6efff 100%);
+  border-radius: 50%;
 }
 
-.member-detail h2 {
+.profile-info h2 {
   margin: 0 0 4px;
+  font-size: 32px;
 }
 
-.member-role {
+.profile-role {
   color: #007bff;
   font-weight: 600;
-  margin: 0 0 24px;
+  margin: 0 0 8px;
 }
 
-.member-bio {
+.profile-tagline {
   color: #666;
-  line-height: 1.8;
-  margin: 0 0 24px;
+  margin: 0 0 20px;
+}
+
+.profile-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.profile-link {
+  padding: 6px 14px;
+  border: 1px solid #dee2e6;
+  border-radius: 16px;
+  color: #555;
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.profile-link:hover {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.profile-hobbies {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hobby-tag {
+  padding: 6px 14px;
+  background: #f1f3f5;
+  color: #555;
+  border-radius: 16px;
+  font-size: 13px;
+}
+
+/* 板块通用 */
+.profile-section {
+  background: white;
+  padding: 40px 48px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-top: 24px;
+}
+
+.profile-section-title {
+  margin: 0 0 20px;
+  font-size: 22px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.profile-paragraph {
+  color: #444;
+  line-height: 1.9;
+  margin: 0 0 12px;
+}
+
+.profile-section .member-skills {
+  margin-top: 16px;
+  justify-content: flex-start;
+}
+
+/* 板块三：成果介绍 */
+.pub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pub-item {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.pub-thumbnail {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  background: #f1f3f5;
+  border-radius: 8px;
+}
+
+.pub-title {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.pub-authors {
+  margin: 0 0 2px;
+  color: #555;
+  font-size: 14px;
+}
+
+.pub-venue {
+  margin: 0 0 8px;
+  color: #007bff;
+  font-size: 14px;
+}
+
+.pub-desc {
+  margin: 0 0 10px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.pub-links {
+  display: flex;
+  gap: 8px;
+}
+
+.pub-link {
+  padding: 4px 12px;
+  background: #e7f1ff;
+  color: #007bff;
+  border-radius: 4px;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.pub-link:hover {
+  background: #d0e3ff;
+}
+
+/* 板块四：个人履历时间线 */
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 28px 28px;
+  border-left: 2px solid #e9ecef;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -7px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #007bff;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px #007bff33;
+}
+
+.timeline-period {
+  display: inline-block;
+  padding: 2px 10px;
+  background: #e7f1ff;
+  color: #007bff;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.timeline-title {
+  margin: 4px 0 2px;
+  font-size: 16px;
+}
+
+.timeline-org {
+  margin: 0 0 6px;
+  color: #555;
+  font-size: 14px;
+}
+
+.timeline-desc {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
 }
 
 .member-skills {
   display: flex;
   gap: 8px;
-  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -601,5 +801,31 @@ tr:last-child td {
   .feature-grid,
   .team-grid {
     grid-template-columns: 1fr;
+  }
+
+  .profile-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 32px 24px;
+  }
+
+  .profile-links,
+  .profile-hobbies,
+  .profile-section .member-skills {
+    justify-content: center;
+  }
+
+  .profile-section {
+    padding: 28px 20px;
+  }
+
+  .pub-item {
+    flex-direction: column;
+  }
+
+  .pub-thumbnail {
+    width: 100%;
+    height: 100px;
   }
 }
