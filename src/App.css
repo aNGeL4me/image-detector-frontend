@@ -423,6 +423,36 @@ tr:last-child td {
   font-size: 13px;
   color: #777;
 }
+
+/* 检测服务状态与错误提示 */
+.service-status {
+  max-width: 900px;
+  margin: 0 auto 24px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.service-status.online {
+  background: #d4edda;
+  color: #155724;
+}
+
+.service-status.offline {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.error-banner {
+  margin: 16px auto 0;
+  max-width: 480px;
+  padding: 10px 16px;
+  background: #f8d7da;
+  color: #721c24;
+  border-radius: 8px;
+  font-size: 14px;
+}
 .detector-box {
   background: white;
   padding: 40px;

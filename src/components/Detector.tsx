@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModelSelector from './ModelSelector';
 import { useModelSelection } from '../hooks/useModelSelection';
+import { checkHealth, detectImage } from '../api/detector';
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 与后端限制一致：10MB
 
 interface DetectionResult {
   id: number;
@@ -8,6 +11,7 @@ interface DetectionResult {
   label: '真实' | 'AI生成';
   confidence: number;
   modelName: string;
+  inferenceMs: number;
   timestamp: string;
 }
 
@@ -17,47 +21,71 @@ export default function Detector() {
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState(false);
   const [results, setResults] = useState<DetectionResult[]>([]);
+  const [error, setError] = useState<string>('');
+  const [serviceOnline, setServiceOnline] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    checkHealth().then(setServiceOnline);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.size > MAX_FILE_SIZE) {
+      setError('图片超过 10MB 上限，请选择更小的文件');
+      e.target.value = '';
+      return;
+    }
+
+    setError('');
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const handleDetect = () => {
+  const handleDetect = async () => {
     if (!selectedFile) return;
 
     setIsDetecting(true);
+    setError('');
 
-    setTimeout(() => {
-      const isFake = Math.random() > 0.5;
-      const confidence = (85 + Math.random() * 14).toFixed(1);
-
+    try {
+      const data = await detectImage(selectedFile, displayed.id);
       const newResult: DetectionResult = {
         id: Date.now(),
         imageUrl: previewUrl,
-        label: isFake ? 'AI生成' : '真实',
-        confidence: parseFloat(confidence),
+        label: data.label,
+        confidence: data.confidence,
         modelName: displayed.name,
+        inferenceMs: data.inference_ms,
         timestamp: new Date().toLocaleTimeString(),
       };
-
       setResults((prev) => [newResult, ...prev]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '检测失败，请稍后重试');
+    } finally {
       setIsDetecting(false);
-    }, 1200);
+    }
   };
 
   const handleReset = () => {
     setSelectedFile(null);
     setPreviewUrl('');
+    setError('');
   };
 
   return (
     <section id="detector" className="section">
       <h2>在线检测</h2>
       <p className="section-subtitle">选择检测模型，上传图片，体验 AI 检测效果</p>
+
+      {serviceOnline !== null && (
+        <p className={`service-status ${serviceOnline ? 'online' : 'offline'}`}>
+          {serviceOnline
+            ? '● 检测服务在线'
+            : '● 检测服务当前不可用（服务地址可能已过期，请联系后端确认）'}
+        </p>
+      )}
 
       <ModelSelector
         displayedId={displayedId}
@@ -80,6 +108,8 @@ export default function Detector() {
           onChange={handleFileChange}
           hidden
         />
+
+        {error && <p className="error-banner">{error}</p>}
 
         {previewUrl && (
           <div className="preview-box">
@@ -108,7 +138,9 @@ export default function Detector() {
                     {item.label}
                   </span>
                   <span className="confidence">置信度：{item.confidence}%</span>
-                  <span className="model-used">模型：{item.modelName}</span>
+                  <span className="model-used">
+                    模型：{item.modelName} · 耗时 {item.inferenceMs}ms
+                  </span>
                   <span className="time">{item.timestamp}</span>
                 </div>
               </div>
